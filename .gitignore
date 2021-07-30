@@ -1,0 +1,20 @@
+#Debug Releaseファイルを無視
+Debug/
+Release/
+
+#vcxproj.user拡張子は無視
+*.vcxproj.user
+
+#icphフォルダは無視
+icph/
+.vs/
+
+#その他バージョン管理にいらないものは無視
+*.opt
+*.clw
+*.ncb
+*.aps
+*.mak
+*.suo
+*.pdb
+*.sdf
