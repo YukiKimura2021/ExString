@@ -1,100 +1,74 @@
 #pragma once
 
-#include<iostream>
-#include<sstream>
+//------------------------------------------------------------
+// develop ver
+//------------------------------------------------------------
 
-// string型, const char*型への型変換が可能な可変長引数を扱える文字列クラス
+#include<iostream>
+
 class ExString
 {
 public:
 
 	ExString();
 	ExString(const std::string& str);
-	ExString(const char* format, ...);
 	ExString(const ExString&) = default;
+
+	//c言語形式
+	ExString(const char* format, ...);
+	ExString(const size_t size, const char* format, ...);
+
+	//c++形式
+	template<typename T>
+	ExString(const T& src);
 
 	//----------------------------------------------------------------
 	// 代入演算子
 	//----------------------------------------------------------------
 
-	const ExString& operator=(const ExString& ex);
-	const ExString& operator=(const std::string& str);
-	const ExString& operator=(const char* cstr);
+	ExString& operator=(const ExString&) = default;
+	ExString& operator=(const std::string& str);
+	ExString& operator=(const char* cstr);
 
 	//----------------------------------------------------------------
 	// 変換演算子
 	//----------------------------------------------------------------
 
-	// FIXME : なぜかExString型からstring型への明示的な型変換ができない
-	// FIXME : ExString型からstring型への代入があいまいなせいで行えない
 	operator std::string();
 	operator std::string() const;
-	operator const char*();
-	operator const char*() const;
 
-	//----------------------------------------------------------------
-	// 挿入演算子
-	//----------------------------------------------------------------
-
-	friend std::istream& operator>>(std::istream& is, ExString& ex);
+	// HACK : string型への暗黙的な代入を可能にするため、とりあえず使えないようにした
+	//operator const char*();
+	//operator const char*() const;
 
 	//----------------------------------------------------------------
 	// 連結演算子
 	//----------------------------------------------------------------
 
 	friend ExString operator+(const ExString& a, const ExString& b);
-	const ExString& operator+=(const ExString& a);
+	ExString&       operator+=(const ExString& a);
 
 	//----------------------------------------------------------------
 	// アクセッサ
 	//----------------------------------------------------------------
 
-	std::string GetStr() const;
-	const char* GetCStr() const;
+	const char* c_str() const;
 
-	void SetStr(const std::string& str);
-	void SetCStr(const char* format, ...);
+	//c言語形式
+	friend int sprintf_s(ExString& const dst, const char* const format, ...);
+	friend int sprintf_s(ExString& const dst, const size_t size, const char* const format, ...);
 
-	bool Debug() const;
+	// TODO : scanfの仕組みを勉強して実装したい
+
+	//c++形式
+	template<typename T>
+	friend ExString&     operator<<(ExString& dst, const T& src);
+	friend std::ostream& operator<<(std::ostream& os, const ExString& str);
+	friend std::istream& operator>>(std::istream& is, ExString& dst);
 
 private:
 
 	std::string _str;
 };
 
-inline const ExString& ExString::operator=(const ExString& ex)
-{
-	_str = ex._str;
-	return *this;
-}
-
-inline const ExString& ExString::operator=(const std::string& str)
-{
-	_str = str;
-	return *this;
-}
-
-inline const ExString& ExString::operator=(const char* cstr)
-{
-	_str = cstr;
-	return *this;
-}
-
-inline ExString::operator std::string()		  { return _str; }
-inline ExString::operator std::string() const { return _str; }
-inline ExString::operator const char*()		  { return _str.c_str(); }
-inline ExString::operator const char*() const { return _str.c_str(); }
-
-inline std::string ExString::GetStr() const  { return _str; }
-inline const char* ExString::GetCStr() const { return _str.c_str(); }
-
-inline void ExString::SetStr(const std::string& str) { _str = str; }
-
-inline std::istream& operator>>(std::istream& is, ExString& ex) { return std::getline(is, ex._str); }
-
-inline ExString operator+(const ExString& a, const ExString& b) { return ExString(a._str + b._str); }
-inline const ExString& ExString::operator+=(const ExString& a)
-{
-	_str += a._str;
-	return *this;
-}
+#include"ExString_Impl.h"

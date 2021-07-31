@@ -1,39 +1,31 @@
 
+//------------------------------------------------------------
+// develop ver
+//------------------------------------------------------------
+
 #include"ExString.h"
-#include<stdarg.h>
 
 using namespace std;
 
-ExString::ExString()
-	:_str()
-{
-	//“Á‚É‚È‚µ
-}
-
-ExString::ExString(const std::string& str)
-	:_str(str)
-{
-	//“Á‚É‚È‚µ
-}
-
-ExString::ExString(const char* format, ...)
+int sprintf_s(ExString& const dst, const char* const format, ...)
 {
 	va_list args;
 	va_start(args, format);
-	char str[1024];
-	vsprintf_s(str, format, args);
+	char src[1024];
+	int rtn = vsprintf_s(src, format, args);
 	va_end(args);
-
-	_str = str;
+	dst._str = src;
+	return rtn;
 }
 
-void ExString::SetCStr(const char* format, ...)
+int sprintf_s(ExString& const dst, const size_t size, const char* const format, ...)
 {
 	va_list args;
 	va_start(args, format);
-	char str[1024];
-	vsprintf_s(str, format, args);
+	char* src = new char[size];
+	int rtn = vsprintf_s(src, size, format, args);
 	va_end(args);
-
-	_str = str;
+	dst._str = src;
+	delete[] src;
+	return rtn;
 }
