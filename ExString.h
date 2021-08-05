@@ -2,7 +2,7 @@
 
 #include<iostream>
 
-class ExString
+class ExString : public std::string
 {
 public:
 
@@ -18,37 +18,30 @@ public:
 	template<typename T>
 	ExString(const T& src);
 
-	//----------------------------------------------------------------
+	//--------------------------------------------------------------------------------------------------
 	// 代入演算子
-	//----------------------------------------------------------------
+	//--------------------------------------------------------------------------------------------------
 
 	ExString& operator=(const ExString&) = default;
 	ExString& operator=(const std::string& str);
 	ExString& operator=(const char* cstr);
 
-	//----------------------------------------------------------------
-	// 変換演算子
-	//----------------------------------------------------------------
+	//--------------------------------------------------------------------------------------------------
+	// 型変換演算子
+	//--------------------------------------------------------------------------------------------------
 
-	operator std::string();
-	operator std::string() const;
+	operator const char*();       //メンバ変数いじってOK ver
+	operator const char*() const; //メンバ変数いじっちゃダメ ver
 
-	// HACK : string型への暗黙的な代入を可能にするため、とりあえず使えないようにした
-	//operator const char*();
-	//operator const char*() const;
-
-	//----------------------------------------------------------------
+	//--------------------------------------------------------------------------------------------------
 	// 連結演算子
-	//----------------------------------------------------------------
+	//--------------------------------------------------------------------------------------------------
 
-	friend ExString operator+(const ExString& a, const ExString& b);
-	ExString&       operator+=(const ExString& a);
+	ExString& operator+=(const ExString& src);
 
-	//----------------------------------------------------------------
+	//--------------------------------------------------------------------------------------------------
 	// アクセッサ
-	//----------------------------------------------------------------
-
-	const char* c_str() const;
+	//--------------------------------------------------------------------------------------------------
 
 	//c言語形式
 	friend int sprintf_s(ExString& const dst, const char* const format, ...);
@@ -59,12 +52,12 @@ public:
 	//c++形式
 	template<typename T>
 	friend ExString&     operator<<(ExString& dst, const T& src);
-	friend std::ostream& operator<<(std::ostream& os, const ExString& str);
+	friend std::ostream& operator<<(std::ostream& os, const ExString& src);
 	friend std::istream& operator>>(std::istream& is, ExString& dst);
 
 private:
 
-	std::string _str;
+	static constexpr size_t _default_size = 256;
 };
 
 #include"ExString_Impl.h"
