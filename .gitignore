@@ -1,20 +1,19 @@
-#Debug Releaseファイルを無視
+#コンパイル時に生成されるファイルは無視
+# - Debug Releaseファイルを無視
 Debug/
 Release/
-
-#vcxproj.user拡張子は無視
+# - vcxproj.user拡張子は無視
 *.vcxproj.user
 
-#icphフォルダは無視
-icph/
+#コミット時に警告を発するファイルを含むし、管理する必要がないフォルダなので無視
 .vs/
 
 #その他バージョン管理にいらないものは無視
-*.opt
-*.clw
-*.ncb
-*.aps
-*.mak
-*.suo
-*.pdb
-*.sdf
+# *.opt
+# *.clw
+# *.ncb
+# *.aps
+# *.mak
+# *.suo
+# *.pdb
+# *.sdf

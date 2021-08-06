@@ -5,80 +5,73 @@ using namespace std;
 
 int main()
 {
-	//------------------------------------------------------------------------------------
-	// 初期化
-	//------------------------------------------------------------------------------------
 	cout << "●初期化" << endl;
 
-	ExString str1("私の年齢は%d歳です.", 20);	    //c言語形式
-	ExString str2(20);							    //int, doubleなどの数値も文字列にする
-	ExString str3 = "I am " + str2 + " years old."; //string形式
+	//'bufSize'のサイズをもつNULL終端文字列を、可変長引数を用いて作成する。
+	const size_t bufSize = 1024;
+	ExString str(bufSize, "I am %d years old.", 20);
 
-	//文字列表示
-	printf("%s\n", str1.c_str()); //c言語形式
-	cout << str3 << endl;		  //c++形式
+	//コピーコンストラクタ
+	ExString str1 = str;
+
+	//string形式の初期化
+	ExString str2 = str + " My name is Yamada.";
+
+	//数値で初期化
+	ExString str3 = 3.14;
+
+	//文字列を表示して改行。
+	printf(str);
+	printf("\n");
+	//この書き方でも同じ。
+	cout << str << endl;
 
 	cout << endl;
-	//------------------------------------------------------------------------------------
-	// 代入
-	//------------------------------------------------------------------------------------
+
 	cout << "●代入" << endl;
-
-	str2 = str1;
-	printf("%s\n", str2.c_str());
-
-	string ss = "string形式の文字列を代入することも可能.";
-	str2 = ss;
-	cout << str2 << endl;
-
-	str2 = "c言語形式の文字列を代入することも可能.";
-	cout << str2 << endl;
-
+	{
+		//新しい文字列を代入して表示する。
+		str = ExString(bufSize, "%s My name is Yamada.", str.c_str());
+		cout << str << endl;
+	}
 	cout << endl;
-	//------------------------------------------------------------------------------------
-	// 文字列作成
-	//------------------------------------------------------------------------------------
-	cout << "●文字列作成" << endl;
 
-	//c言語形式 : 文字列を書き換える形
-	sprintf_s(str1, 1024, "%s 名前は%sです.", str1.c_str(), "山田　太郎");
-	printf("%s\n", str1.c_str());
-
-	//c++形式 : 文字列の後ろに付け加えていく形
-	str3 << " My name is " << "Yamada Taro.";
-	cout << str3 << endl;
-
+	cout << "●一時オブジェクト" << endl;
+	{
+		//一時オブジェクトを使っても同じことができる。
+		cout << ExString(bufSize, "He is %d years old.", 40) << endl;
+	}
 	cout << endl;
-	//------------------------------------------------------------------------------------
-	// ExString型 → string型
-	//------------------------------------------------------------------------------------
-	cout << "●ExString型 → string型" << endl;
 
-	string str = str1;
-	cout << str << endl;
-	str = str3;
-	cout << str << endl;
+	cout << "●文字列の挿入" << endl;
+	{
+		str.clear();
+		//'str'文字列のうしろに、右側の変数を連結していく(すなわち挿入)。
+		str << "He is " << 40 << " years old.";
+		str << " His name is Takashi.";
+		cout << str << endl;
 
+		//連結演算子もstring型と同様使える.
+		cout << "Hello! " + str << endl;
+	}
 	cout << endl;
-	//------------------------------------------------------------------------------------
-	// ExString型 → const char*型
-	//------------------------------------------------------------------------------------
-	cout << "●ExString型 → const char*型" << endl;
 
-	const char* cstr = str1.c_str();
-	cout << cstr << endl;
-	cstr = str3.c_str();
-	cout << cstr << endl;
-
+	cout << "●数値を文字列として扱う" << endl;
+	{
+		str.clear();
+		for (int i = 0; i < 10; ++i)
+		{
+			//int, double型などの数値も文字列として代入、連結できる。
+			str += i % 2;
+		}
+		cout << str << endl;
+	}
 	cout << endl;
-	//------------------------------------------------------------------------------------
-	// ユーザ入力
-	//------------------------------------------------------------------------------------
+
 	cout << "●ユーザ入力" << endl;
-
-	cout << "感想をどうぞ！" << endl;
-	cin  >> str1;
-	cout << "あなたの感想：" << str1;
-
+	{
+		cin >> str;
+		cout << "入力：" << str << endl;
+	}
 	cout << endl;
 }

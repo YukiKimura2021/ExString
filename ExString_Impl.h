@@ -5,18 +5,18 @@
 #include<stdarg.h>
 #include<sstream>
 
-//#include<tchar.h>
-//using tstring = std::basic_string<TCHAR>;
-//using tchar   = TCHAR;
+//--------------------------------------------------------------------------------------------------
+// コンストラクタ
+//--------------------------------------------------------------------------------------------------
 
 inline ExString::ExString()
-	:_str()
+	:std::string()
 {
 	//特になし
 }
 
 inline ExString::ExString(const std::string& str)
-	:_str(str)
+	:std::string(str)
 {
 	//特になし
 }
@@ -25,10 +25,10 @@ inline ExString::ExString(const char* format, ...)
 {
 	va_list args;
 	va_start(args, format);
-	char src[1024];
+	char src[ExString::_default_size];
 	vsprintf_s(src, format, args);
 	va_end(args);
-	_str = src;
+	assign(src);
 }
 
 inline ExString::ExString(const size_t size, const char* format, ...)
@@ -38,7 +38,7 @@ inline ExString::ExString(const size_t size, const char* format, ...)
 	char* src = new char[size];
 	vsprintf_s(src, size, format, args);
 	va_end(args);
-	_str = src;
+	assign(src);
 	delete[] src;
 }
 
@@ -47,40 +47,41 @@ ExString::ExString(const T& src)
 {
 	std::stringstream ss;
 	ss << src;
-	_str = ss.str();
+	assign(ss.str());
 }
 
-inline ExString& ExString::operator=(const std::string& str) { _str = str;  return *this; }
-inline ExString& ExString::operator=(const char* cstr)       { _str = cstr; return *this; }
+//--------------------------------------------------------------------------------------------------
+// 代入演算子
+//--------------------------------------------------------------------------------------------------
 
-inline ExString::operator std::string()       { return _str; }
-inline ExString::operator std::string() const { return _str; }
-//inline ExString::operator const char*()       { return _str.c_str(); }
-//inline ExString::operator const char*() const { return _str.c_str(); }
+inline ExString& ExString::operator=(const std::string& str) { assign(str);  return *this; }
+inline ExString& ExString::operator=(const char* cstr)       { assign(cstr); return *this; }
 
-inline ExString            operator+(const ExString& a, const ExString& b) { return ExString(a._str + b._str); }
-inline ExString& ExString::operator+=(const ExString& a)                   { _str += a._str; return *this; }
+//--------------------------------------------------------------------------------------------------
+// 型変換演算子
+//--------------------------------------------------------------------------------------------------
 
-inline const char* ExString::c_str() const 
-{ 
-	return _str.c_str();
-}
+inline ExString::operator const char*()       { return c_str(); }
+inline ExString::operator const char*() const { return c_str(); }
+
+//--------------------------------------------------------------------------------------------------
+// 連結演算子
+//--------------------------------------------------------------------------------------------------
+
+inline ExString& ExString::operator+=(const ExString& src) { append(static_cast<std::string>(src)); return *this; }
+
+//--------------------------------------------------------------------------------------------------
+// アクセッサ
+//--------------------------------------------------------------------------------------------------
+
+inline std::ostream& operator<<(std::ostream& os, const ExString& src) { return os << static_cast<std::string>(src); }
+inline std::istream& operator>>(std::istream& is, ExString& dst)	   { return std::getline(is, dst); }
 
 template<typename T>
-inline ExString& operator<<(ExString& dst, const T& str)
+inline ExString& operator<<(ExString& dst, const T& src)
 {
 	std::stringstream ss;
-	ss << str;
-	dst._str += ss.str();
+	ss << src;
+	dst += ss.str();
 	return dst;
-}
-
-inline std::ostream& operator<<(std::ostream& os, const ExString& str)
-{
-	return os << str._str;
-}
-
-inline std::istream& operator>>(std::istream& is, ExString& dst)
-{
-	return std::getline(is, dst._str);
 }
