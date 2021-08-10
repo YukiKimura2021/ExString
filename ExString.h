@@ -1,6 +1,12 @@
 #pragma once
 
 #include<iostream>
+#include<tchar.h>
+
+namespace std
+{
+	using tstring = basic_string<TCHAR>;
+}
 
 class ExString : public std::string
 {
@@ -54,10 +60,6 @@ public:
 	friend ExString&     operator<<(ExString& dst, const T& src);
 	friend std::ostream& operator<<(std::ostream& os, const ExString& src);
 	friend std::istream& operator>>(std::istream& is, ExString& dst);
-
-private:
-
-	static constexpr size_t _default_size = 256;
 };
 
 #include"ExString_Impl.h"

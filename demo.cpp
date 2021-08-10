@@ -7,9 +7,8 @@ int main()
 {
 	cout << "●初期化" << endl;
 
-	//'bufSize'のサイズをもつNULL終端文字列を、可変長引数を用いて作成する。
-	const size_t bufSize = 1024;
-	ExString str(bufSize, "I am %d years old.", 20);
+	//NULL終端文字列を、可変長引数を用いて作成する。
+	ExString str("I am %d years old.", 20);
 
 	//コピーコンストラクタ
 	ExString str1 = str;
@@ -31,7 +30,7 @@ int main()
 	cout << "●代入" << endl;
 	{
 		//新しい文字列を代入して表示する。
-		str = ExString(bufSize, "%s My name is Yamada.", str.c_str());
+		str = ExString("%s My name is Yamada.", str.c_str());
 		cout << str << endl;
 	}
 	cout << endl;
@@ -39,7 +38,7 @@ int main()
 	cout << "●一時オブジェクト" << endl;
 	{
 		//一時オブジェクトを使っても同じことができる。
-		cout << ExString(bufSize, "He is %d years old.", 40) << endl;
+		cout << ExString("He is %d years old.", 40) << endl;
 	}
 	cout << endl;
 

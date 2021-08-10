@@ -2,6 +2,7 @@
 # - Debug Releaseファイルを無視
 Debug/
 Release/
+x64/
 # - vcxproj.user拡張子は無視
 *.vcxproj.user
 

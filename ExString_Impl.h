@@ -25,21 +25,27 @@ inline ExString::ExString(const char* format, ...)
 {
 	va_list args;
 	va_start(args, format);
-	char src[ExString::_default_size];
-	vsprintf_s(src, format, args);
+	int size = _vscprintf(format, args) + 1;
+	if (char* src = new char[size])
+	{
+		int strLength = vsprintf_s(src, size, format, args);
+		if (strLength != -1) assign(src);
+		delete[] src;
+	}
 	va_end(args);
-	assign(src);
 }
 
 inline ExString::ExString(const size_t size, const char* format, ...)
 {
 	va_list args;
 	va_start(args, format);
-	char* src = new char[size];
-	vsprintf_s(src, size, format, args);
+	if (char* src = new char[size])
+	{
+		int strLength = vsprintf_s(src, size, format, args);
+		if (strLength != -1) assign(src);
+		delete[] src;
+	}
 	va_end(args);
-	assign(src);
-	delete[] src;
 }
 
 template<typename T>
