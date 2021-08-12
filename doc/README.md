@@ -14,13 +14,13 @@ std::string型をもっと扱いやすいように改良したクラス。もち
 
 13/08/21 ExString ver2.0
 - ExWStringクラスとstd::wcoutなどとの併用で、ワイド文字(Unicode文字)出力に対応。  
-　最近のWindowsでは、<b>ワイド文字出力にUnicode文字が対応</b>しているみたいです。しかし、ロケールの関係上  
-　wprintf関数の動作が不安定化するなど、扱い方が少し難しくなっています。  
-　詳細は私が参考にしたサイト https://bit.ly/3AGO5Nt をどうぞ。  
+最近のWindowsでは、<b>ワイド文字出力にUnicode文字が対応</b>しているみたいです。しかし、ロケールの関係上  
+wprintf関数の動作が不安定化するなど、扱い方が少し難しくなっています。  
+詳細は私が参考にしたサイト https://bit.ly/3AGO5Nt をどうぞ。  
 
 - ExTStringクラスは、Unicodeマクロが定義されているかどうかで、ExString、ExWStringを切り替えます。  
-　また、ExTStringクラスを扱う際は、必ず_Tマクロを使用してください。  
-　例）ExTString str = _T("Hello World!");  
+また、ExTStringクラスを扱う際は、必ず_Tマクロを使用してください。  
+例）ExTString str = _T("Hello World!");  
 
 ## アップデート履歴
 
