@@ -1,60 +1,66 @@
 #pragma once
 
 #include<iostream>
+#include<stdio.h>
 #include<tchar.h>
 
-class ExString : public std::string
+template<typename T = char>
+class ExBasicString : public std::basic_string<T>
 {
 public:
 
-	ExString();
-	ExString(const std::string& str);
-	ExString(const ExString&) = default;
+	ExBasicString();
+	ExBasicString(const std::basic_string<T>& str);
+	ExBasicString(const ExBasicString&) = default;
 
 	//c言語形式
-	ExString(const char* format, ...);
-	ExString(const size_t size, const char* format, ...);
+	ExBasicString(const T* const format, ...);
+	ExBasicString(const size_t size, const T* const format, ...);
 
 	//c++形式
-	template<typename T>
-	ExString(const T& src);
+	template<typename U>
+	ExBasicString(const U& src);
 
 	//--------------------------------------------------------------------------------------------------
 	// 代入演算子
 	//--------------------------------------------------------------------------------------------------
 
-	ExString& operator=(const ExString&) = default;
-	ExString& operator=(const std::string& str);
-	ExString& operator=(const char* cstr);
+	ExBasicString& operator=(const ExBasicString&) = default;
+	ExBasicString& operator=(const std::basic_string<T>& str);
+	ExBasicString& operator=(const T* cstr);
 
 	//--------------------------------------------------------------------------------------------------
 	// 型変換演算子
 	//--------------------------------------------------------------------------------------------------
 
-	operator const char*();       //メンバ変数いじってOK ver
-	operator const char*() const; //メンバ変数いじっちゃダメ ver
+	operator const T*();       //メンバ変数いじってOK ver
+	operator const T*() const; //メンバ変数いじっちゃダメ ver
 
 	//--------------------------------------------------------------------------------------------------
 	// 連結演算子
 	//--------------------------------------------------------------------------------------------------
 
-	ExString& operator+=(const ExString& src);
+	ExBasicString& operator+=(const ExBasicString& src);
 
 	//--------------------------------------------------------------------------------------------------
 	// アクセッサ
 	//--------------------------------------------------------------------------------------------------
 
 	//c言語形式
-	friend int sprintf_s(ExString& const dst, const char* const format, ...);
-	friend int sprintf_s(ExString& const dst, const size_t size, const char* const format, ...);
+	friend int sprintf_s(ExBasicString& dst, const T* const format, ...);
+	friend int sprintf_s(ExBasicString& dst, const size_t size, const T* const format, ...);
 
 	// TODO : scanfの仕組みを勉強して実装したい
 
 	//c++形式
-	template<typename T>
-	friend ExString&     operator<<(ExString& dst, const T& src);
-	friend std::ostream& operator<<(std::ostream& os, const ExString& src);
-	friend std::istream& operator>>(std::istream& is, ExString& dst);
+	template<typename U>
+	ExBasicString& operator<<(const U& src);
+	ExBasicString& operator<<(const T* src);
 };
 
-#include"ExString_Impl.h"
+using ExString	= ExBasicString<char>;
+using ExWString = ExBasicString<wchar_t>;
+using ExTString = ExBasicString<TCHAR>;
+
+#include"impl/VsExPrinter_Impl.h"
+#include"impl/ExString_Impl.h"
